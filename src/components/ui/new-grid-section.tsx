@@ -48,14 +48,14 @@ export function NewGridSection() {
           <div className="md:col-span-3 md:row-span-4 md:col-start-3 rounded-3xl bg-zinc-900/50 border border-white/5 p-8 flex flex-col min-h-[500px] md:min-h-0">
             <div className="grid grid-cols-6 gap-3 mb-8">
               {[
-                { name: "VS Code", icon: <img src="https://cdn.designfast.io/image/2026-05-06/a3a8a651-12fd-4f07-9996-9714018c907f.png" alt="VS Code" className="w-5 h-5 object-contain" />, href: "#", className: "col-span-2" },
-                { name: "n8n", icon: <SiN8N className="w-4 h-4 text-[#FF6D5B]" />, href: "#", className: "col-span-2" },
-                { name: "Pinterest", icon: <FaPinterest className="w-4 h-4 text-[#E60023]" />, href: "#", className: "col-span-2" },
-                { name: "Figma", icon: <FaFigma className="w-4 h-4" />, href: "#", className: "col-span-3" },
+                { name: "VS Code", icon: <img src="https://cdn.designfast.io/image/2026-05-06/a3a8a651-12fd-4f07-9996-9714018c907f.png" alt="VS Code" className="w-5 h-5 object-contain" />, href: "https://code.visualstudio.com/", className: "col-span-2" },
+                { name: "n8n", icon: <SiN8N className="w-4 h-4 text-[#FF6D5B]" />, href: "https://n8n.io/", className: "col-span-2" },
+                { name: "Pinterest", icon: <FaPinterest className="w-4 h-4 text-[#E60023]" />, href: "https://in.pinterest.com/", className: "col-span-2" },
+                { name: "Figma", icon: <FaFigma className="w-4 h-4" />, href: "https://www.figma.com/", className: "col-span-3" },
                 { 
                   name: "Canva", 
                   icon: <img src="https://cdn.designfast.io/image/2026-05-06/fad99217-9d91-4861-b517-8cecb7d717d8.png" alt="Stitch" className="w-5 h-5 object-contain" />, 
-                  href: "#",
+                  href: "https://www.canva.com/",
                   className: "col-span-3"
                 },
               ].map((tool) => (
