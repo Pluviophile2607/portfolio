@@ -1,0 +1,159 @@
+.parallax-container {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  height: 600px;
+  margin: 4rem auto;
+  overflow: hidden;
+  background-color: #000;
+  cursor: grab;
+  border-radius: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+}
+
+.parallax-container:active {
+  cursor: grabbing;
+}
+
+.project-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.project {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.project img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  transform: scale(1.5); /* Base scale for parallax */
+}
+
+/* Minimap Styles */
+.minimap {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 320px;
+  height: 250px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+.minimap-wrapper {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  height: 100%;
+  width: 100%;
+}
+
+.minimap-img-preview {
+  position: relative;
+  width: 80px;
+  height: 100%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.minimap-img-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.minimap-img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.5);
+}
+
+.minimap-info-list {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.minimap-item-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #fff;
+  will-change: transform;
+}
+
+.minimap-item-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-sans);
+}
+
+.minimap-item-info-row p {
+  margin: 0;
+}
+
+.minimap-item-info-row .num {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  font-family: var(--font-mono);
+}
+
+.minimap-item-info-row .title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.minimap-item-info-row.secondary {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.25rem;
+}
+
+.minimap-item-info-row.desc {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .minimap {
+    display: none; /* Hide minimap on mobile for better UX */
+  }
+}
