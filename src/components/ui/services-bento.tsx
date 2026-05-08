@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Paintbrush, Code2, Layout, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,11 @@ import Grainient from "./grainient";
 import Globe from "./globe";
 import Silk from "./silk";
 import { prepareWithSegments, layoutWithLines } from "@chenglou/pretext";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface BentoCardProps {
   title: string;
@@ -29,40 +33,37 @@ const BentoCard = ({ title, description, icon, className, index, image, gridRef 
     cardOffset: { x: 0, y: 0 } 
   });
 
-    useEffect(() => {
+  useEffect(() => {
+    if (!containerRef.current || !gridRef.current) return;
+    
+    const updateLayout = () => {
       if (!containerRef.current || !gridRef.current) return;
+      const grid = gridRef.current;
+      const card = containerRef.current;
       
-      const updateLayout = () => {
-        if (!containerRef.current || !gridRef.current) return;
-        const grid = gridRef.current;
-        const card = containerRef.current;
-        
-        setGlobalData({
-          globalSize: { 
-            width: grid.offsetWidth || 1, 
-            height: grid.offsetHeight || 1 
-          },
-          // Force y: 0 to mirror vertical pairs as requested
-          cardOffset: { x: card.offsetLeft, y: 0 }
-        });
-        setContainerWidth(card.offsetWidth);
-      };
+      setGlobalData({
+        globalSize: { 
+          width: grid.offsetWidth || 1, 
+          height: grid.offsetHeight || 1 
+        },
+        cardOffset: { x: card.offsetLeft, y: 0 }
+      });
+      setContainerWidth(card.offsetWidth);
+    };
 
-      // Initial measurement
-      updateLayout();
-      
-      // Monitor both window and grid resizing
-      const ro = new ResizeObserver(updateLayout);
-      ro.observe(gridRef.current);
-      window.addEventListener('resize', updateLayout);
-      
-      const timer = setTimeout(updateLayout, 100);
-      return () => {
-        window.removeEventListener('resize', updateLayout);
-        ro.disconnect();
-        clearTimeout(timer);
-      };
-    }, [gridRef]);
+    updateLayout();
+    
+    const ro = new ResizeObserver(updateLayout);
+    ro.observe(gridRef.current);
+    window.addEventListener('resize', updateLayout);
+    
+    const timer = setTimeout(updateLayout, 100);
+    return () => {
+      window.removeEventListener('resize', updateLayout);
+      ro.disconnect();
+      clearTimeout(timer);
+    };
+  }, [gridRef]);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -88,11 +89,6 @@ const BentoCard = ({ title, description, icon, className, index, image, gridRef 
     return prepareWithSegments(title, `bold ${fontSize} Inter, sans-serif`);
   }, [title, mounted]);
 
-  const descLayout = useMemo(() => {
-    if (!mounted || !preparedDesc || containerWidth === 0) return null;
-    return layoutWithLines(preparedDesc, containerWidth, 24);
-  }, [preparedDesc, containerWidth, mounted]);
-
   const titleLayout = useMemo(() => {
     if (!mounted || !preparedTitle || containerWidth === 0) return null;
     return layoutWithLines(preparedTitle, containerWidth, 32);
@@ -116,7 +112,7 @@ const BentoCard = ({ title, description, icon, className, index, image, gridRef 
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={cn(
-        "group relative overflow-hidden rounded-[1.5rem] border border-white/10 p-6 flex flex-col min-h-[250px] backdrop-blur-xl",
+        "group relative overflow-hidden rounded-[1.5rem] border border-white/10 p-6 flex flex-col min-h-[350px] md:min-h-[250px] backdrop-blur-xl",
         className
       )}
     >
@@ -227,49 +223,87 @@ interface Service {
 }
 
 export function ServicesBento() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useGSAP(() => {
+    if (!isMobile || !containerRef.current || !gridRef.current) return;
+
+    const grid = gridRef.current;
+    const scrollWidth = grid.scrollWidth;
+    const windowWidth = window.innerWidth;
+    const scrollAmount = scrollWidth - windowWidth + 48; // Adjust for horizontal padding
+
+    const ctx = gsap.context(() => {
+      gsap.to(grid, {
+        x: -scrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          pin: true,
+          scrub: 1,
+          start: "center center",
+          end: () => `+=${scrollWidth}`,
+          invalidateOnRefresh: true,
+        }
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [isMobile]);
+
   const services: Service[] = [
     {
       title: "UI/UX Design",
       description: "Crafting user-friendly and visually engaging interfaces that deliver exceptional experiences.",
       icon: <Paintbrush className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2",
+      className: "md:col-span-2 md:row-span-2 w-[85vw] md:w-auto shrink-0",
     },
     {
       title: "Branding & Identity",
       description: "Designing cohesive and impactful brand identities to help you stand out.",
       icon: <Layout className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 md:col-start-3",
+      className: "md:col-span-2 md:row-span-2 md:col-start-3 w-[85vw] md:w-auto shrink-0",
     },
     {
       title: "What I Offer",
       description: "From intuitive UI/UX design to seamless website development, I create digital solutions tailored to your needs. Let's turn your ideas into impactful experiences!",
       icon: null,
-      className: "md:col-span-2 md:row-span-4 md:col-start-5 min-h-[500px] md:min-h-0",
+      className: "md:col-span-2 md:row-span-4 md:col-start-5 min-h-[500px] md:min-h-0 w-[85vw] md:w-auto shrink-0",
     },
     {
       title: "Web Development",
       description: "Building responsive, high-performing websites with modern tools and technologies.",
       icon: <Code2 className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 md:row-start-3",
+      className: "md:col-span-2 md:row-span-2 md:row-start-3 w-[85vw] md:w-auto shrink-0",
     },
     {
       title: "Prototyping",
       description: "Turning ideas into interactive prototypes to visualize functionality and user flow effectively.",
       icon: <Sparkles className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 md:col-start-3 md:row-start-3",
+      className: "md:col-span-2 md:row-span-2 md:col-start-3 md:row-start-3 w-[85vw] md:w-auto shrink-0",
     },
   ];
 
   return (
-    <section className="bg-black px-6 pb-32 relative overflow-hidden">
-      <div className="mx-auto max-w-7xl relative z-10">
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-6 md:grid-rows-4 gap-3 md:h-[650px]">
+    <section ref={containerRef} className="bg-black relative overflow-hidden flex items-center min-h-[600px] md:min-h-0">
+      <div className="mx-auto max-w-7xl px-6 w-full h-full flex items-center">
+        <div 
+          ref={gridRef} 
+          className={cn(
+            "gap-3 md:gap-4 transition-all w-full",
+            isMobile ? "flex flex-nowrap" : "grid grid-cols-1 md:grid-cols-6 md:grid-rows-4 md:h-[650px]"
+          )}
+        >
           {services.map((service, index) => {
-            // Sync delays for vertical pairs:
-            // UI/UX (0) & Web Dev (3) -> 0
-            // Branding (1) & Prototyping (4) -> 1
-            // What I Offer (2) -> 2
             const syncIndex = index > 2 ? index - 3 : index;
             return <BentoCard key={index} {...service} index={syncIndex} gridRef={gridRef} />;
           })}

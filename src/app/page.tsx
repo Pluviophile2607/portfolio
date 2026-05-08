@@ -7,11 +7,13 @@ import { ProjectCards } from "@/components/ui/project-cards";
 import { ServicesBento } from "@/components/ui/services-bento";
 import { NewGridSection } from "@/components/ui/new-grid-section";
 import { Preloader } from "@/components/preloader";
+import { Intro } from "@/components/intro";
 import { FloatingConsultButton } from "@/components/ui/floating-consult-button";
 import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 export default function Home() {
+  const [showIntro, setShowIntro] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const { scrollY } = useScroll();
@@ -59,7 +61,15 @@ export default function Home() {
 
   return (
     <>
-      <Preloader onComplete={() => setIsLoading(false)} />
+      <AnimatePresence mode="wait">
+        {showIntro && (
+          <Intro key="intro" onEnter={() => setShowIntro(false)} />
+        )}
+        
+        {!showIntro && isLoading && (
+          <Preloader key="preloader" onComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
       
       <motion.main 
         initial={{ opacity: 0 }}
@@ -114,3 +124,4 @@ export default function Home() {
     </>
   )
 }
+

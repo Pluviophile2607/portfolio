@@ -45,8 +45,8 @@ export function NewGridSection() {
           </div>
 
           {/* div2 */}
-          <div className="md:col-span-3 md:row-span-4 md:col-start-3 rounded-3xl bg-zinc-900/50 border border-white/5 p-8 flex flex-col min-h-[500px] md:min-h-0">
-            <div className="grid grid-cols-6 gap-3 mb-8">
+          <div className="md:col-span-3 md:row-span-4 md:col-start-3 rounded-3xl bg-zinc-900/50 border border-white/5 p-4 md:p-8 flex flex-col min-h-[500px] md:min-h-0">
+            <div className="grid grid-cols-6 gap-2 md:gap-3 mb-8">
               {[
                 { name: "VS Code", icon: <img src="https://cdn.designfast.io/image/2026-05-06/a3a8a651-12fd-4f07-9996-9714018c907f.png" alt="VS Code" className="w-5 h-5 object-contain" />, href: "https://code.visualstudio.com/", className: "col-span-2" },
                 { name: "n8n", icon: <SiN8N className="w-4 h-4 text-[#FF6D5B]" />, href: "https://n8n.io/", className: "col-span-2" },
@@ -54,26 +54,27 @@ export function NewGridSection() {
                 { name: "Figma", icon: <FaFigma className="w-4 h-4" />, href: "https://www.figma.com/", className: "col-span-3" },
                 { 
                   name: "Canva", 
-                  icon: <img src="https://cdn.designfast.io/image/2026-05-06/fad99217-9d91-4861-b517-8cecb7d717d8.png" alt="Stitch" className="w-5 h-5 object-contain" />, 
+                  icon: <img src="https://cdn.designfast.io/image/2026-05-06/fad99217-9d91-4861-b517-8cecb7d717d8.png" alt="Canva" className="w-5 h-5 object-contain" />, 
                   href: "https://www.canva.com/",
                   className: "col-span-3"
                 },
+
               ].map((tool) => (
                 <a 
                   key={tool.name}
                   href={tool.href}
                   className={cn(
-                    "bg-zinc-100 rounded-xl p-3 flex flex-col justify-between h-32 group/card transition-all hover:bg-white",
+                    "bg-zinc-100 rounded-xl p-3 flex flex-col justify-between h-24 sm:h-28 md:h-32 group/card transition-all hover:bg-white",
                     tool.className
                   )}
                 >
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                     {tool.icon}
                   </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-zinc-900 font-serif italic font-bold text-base">{tool.name}</span>
-                    <div className="w-6 h-6 rounded-full border border-zinc-200 flex items-center justify-center group-hover/card:bg-zinc-900 group-hover/card:text-white transition-colors">
-                      <ArrowUpRight className="w-3 h-3" />
+                  <div className="flex items-center justify-between mt-2 overflow-hidden">
+                    <span className="text-zinc-900 font-serif italic font-bold text-[10px] sm:text-xs md:text-base truncate">{tool.name}</span>
+                    <div className="w-5 h-5 md:w-7 md:h-7 rounded-full border border-zinc-200 flex items-center justify-center group-hover/card:bg-zinc-900 group-hover/card:text-white transition-colors shrink-0">
+                      <ArrowUpRight className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
                     </div>
                   </div>
                 </a>
@@ -87,6 +88,8 @@ export function NewGridSection() {
               </p>
             </div>
           </div>
+
+
         </div>
       </div>
     </section>
