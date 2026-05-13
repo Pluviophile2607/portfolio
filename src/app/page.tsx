@@ -13,8 +13,8 @@ import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 export default function Home() {
-  const [showIntro, setShowIntro] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const { scrollY } = useScroll();
 
