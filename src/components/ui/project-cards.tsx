@@ -17,31 +17,31 @@ const projects: Project[] = [
   {
     id: 1,
     title: "Tera Mera",
-    image: "/cards-img/4.jpg",
+    image: "https://cdn.designfast.io/image/2026-05-12/68fe2048-7a5e-4d55-93f0-afa87ac6cac8.jpeg",
     category: "Web Site"
   },
   {
     id: 2,
     title: "ZED NGO",
-    image: "/cards-img/5.jpg",
+    image: "https://cdn.designfast.io/image/2026-05-12/65c81e50-890b-493e-87e0-9e30235ebd8b.jpeg",
     category: "Web Site"
   },
   {
     id: 3,
     title: "Swastik Power Project",
-    image: "/cards-img/6.jpg",
+    image: "https://cdn.designfast.io/image/2026-05-12/b3422204-bfdf-4e52-a78c-1c2a0c30dfdb.jpeg",
     category: "Web Site"
   },
   {
     id: 4,
     title: "Aiz-Boostr",
-    image: "/cards-img/7.jpg",
+    image: "https://cdn.designfast.io/image/2026-05-12/c82e986e-a9a9-4479-a8d4-e682a8373f9e.jpeg",
     category: "Web Site"
   },
   {
     id: 5,
     title: "Adhyan Academy",
-    image: "/cards-img/8.jpg",
+    image: "https://cdn.designfast.io/image/2026-05-12/6e0fd967-264b-42f0-a290-ae688a332895.jpeg",
     category: "Web Site"
   }
 ];

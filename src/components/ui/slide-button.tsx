@@ -22,26 +22,26 @@ import { Check, Loader2, SendHorizontal, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button, ButtonProps } from "@/components/ui/button"
 
-const DRAG_CONSTRAINTS = { left: 0, right: 185 }
-const DRAG_THRESHOLD = 0.9
+const DRAG_CONSTRAINTS = { left: 0, right: 190 }
+const DRAG_THRESHOLD = 0.85
 
 const BUTTON_STATES = {
-  initial: { width: "15rem" },
-  completed: { width: "8rem" },
+  initial: { width: "16rem", opacity: 1 },
+  completed: { width: "4rem", opacity: 1 },
 }
-
 
 const ANIMATION_CONFIG = {
   spring: {
     type: "spring",
-    stiffness: 300,
-    damping: 30,
-    mass: 0.8,
+    stiffness: 400,
+    damping: 40,
+    mass: 1,
   },
   soft: {
     type: "spring",
-    stiffness: 200,
+    stiffness: 250,
     damping: 25,
+    mass: 0.8,
   }
 } as const
 
@@ -53,9 +53,9 @@ type StatusIconProps = {
 const StatusIcon: React.FC<StatusIconProps> = ({ status }) => {
   const iconMap: Record<StatusIconProps["status"], JSX.Element> = useMemo(
     () => ({
-      loading: <Loader2 className="animate-spin" size={20} />,
-      success: <Check size={20} />,
-      error: <X size={20} />,
+      loading: <Loader2 className="animate-spin" size={22} />,
+      success: <Check size={22} />,
+      error: <X size={22} />,
     }),
     []
   )
@@ -65,10 +65,10 @@ const StatusIcon: React.FC<StatusIconProps> = ({ status }) => {
   return (
     <motion.div
       key={status}
-      initial={{ opacity: 0, scale: 0.8, rotate: -45 }}
+      initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
-      exit={{ opacity: 0, scale: 0.5 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      exit={{ opacity: 0, scale: 0.5, rotate: 90 }}
+      transition={{ type: "spring", stiffness: 500, damping: 30 }}
     >
       {iconMap[status]}
     </motion.div>
@@ -82,12 +82,13 @@ const useButtonStatus = (resolveTo: "success" | "error", onSuccess?: () => void)
 
   const handleSubmit = useCallback(() => {
     setStatus("loading")
+    // Artificial delay for premium feel
     setTimeout(() => {
       setStatus(resolveTo)
       if (resolveTo === "success" && onSuccess) {
-        setTimeout(onSuccess, 600)
+        setTimeout(onSuccess, 800)
       }
-    }, 1200)
+    }, 1500)
   }, [resolveTo, onSuccess])
 
   return { status, handleSubmit }
@@ -101,36 +102,23 @@ const SlideButton = forwardRef<HTMLButtonElement, SlideButtonProps>(
   ({ className, onSuccess, ...props }, ref) => {
     const [isDragging, setIsDragging] = useState(false)
     const [completed, setCompleted] = useState(false)
-    const dragHandleRef = useRef<HTMLDivElement | null>(null)
     const { status, handleSubmit } = useButtonStatus("success", onSuccess)
 
     const dragX = useMotionValue(0)
-    // Use spring only for the progress-dependent visuals, not the handle position itself
-    const springX = useSpring(dragX, { stiffness: 200, damping: 25 })
+    // Smooth trailing spring for the background fill and text opacity
+    const smoothX = useSpring(dragX, { stiffness: 150, damping: 20 })
     
-    const dragProgress = useTransform(
-      dragX, // Use raw drag for progress calculation for better responsiveness
-      [0, DRAG_CONSTRAINTS.right],
-      [0, 1]
-    )
+    const dragProgress = useTransform(dragX, [0, DRAG_CONSTRAINTS.right], [0, 1])
+    const smoothProgress = useTransform(smoothX, [0, DRAG_CONSTRAINTS.right], [0, 1])
 
-    const springProgress = useTransform(
-      springX,
-      [0, DRAG_CONSTRAINTS.right],
-      [0, 1]
-    )
+    const textOpacity = useTransform(dragProgress, [0, 0.4], [1, 0])
+    const bgOpacity = useTransform(smoothProgress, [0, 1], [0.05, 0.25])
+    const adjustedWidth = useTransform(smoothX, (x) => x + 56)
 
-    const clipPath = useTransform(
-      dragX,
-      [0, DRAG_CONSTRAINTS.right * 0.8],
-      ["inset(0 0 0 0%)", "inset(0 0 0 100%)"]
-    )
-    const bgOpacity = useTransform(springProgress, [0, 1], [0.05, 0.2])
-
-    const handleDragStart = useCallback(() => {
+    const handleDragStart = () => {
       if (completed) return
       setIsDragging(true)
-    }, [completed])
+    }
 
     const handleDragEnd = () => {
       if (completed) return
@@ -140,35 +128,24 @@ const SlideButton = forwardRef<HTMLButtonElement, SlideButtonProps>(
       if (progress >= DRAG_THRESHOLD) {
         setCompleted(true)
         handleSubmit()
-        // Snap to end for completion
         dragX.set(DRAG_CONSTRAINTS.right)
       } else {
         dragX.set(0)
       }
     }
 
-    const handleDrag = (
-      _event: MouseEvent | TouchEvent | PointerEvent,
-      info: PanInfo
-    ) => {
-      if (completed) return
-      // The drag component handles the 'x' property internally when drag="x" is used.
-      // We just need to sync our MotionValue for other animations.
-      dragX.set(info.offset.x)
-    }
-
-    const adjustedWidth = useTransform(springX, (x) => x + 48)
-
     return (
       <motion.div
-        animate={completed ? BUTTON_STATES.completed : BUTTON_STATES.initial}
+        animate={completed ? "completed" : "initial"}
+        variants={BUTTON_STATES}
         transition={ANIMATION_CONFIG.soft}
         className={cn(
-          "relative flex h-14 items-center justify-center rounded-full bg-white/5 border border-white/10 overflow-hidden transition-colors duration-300",
+          "relative flex h-16 items-center justify-center rounded-full bg-white/5 border border-white/10 overflow-hidden backdrop-blur-sm",
           isDragging && "border-white/20 bg-white/10",
-          completed && "border-transparent bg-transparent"
+          completed && "border-transparent bg-white shadow-[0_0_40px_rgba(255,255,255,0.2)]"
         )}
       >
+        {/* Fill Background */}
         {!completed && (
           <motion.div
             style={{
@@ -179,36 +156,37 @@ const SlideButton = forwardRef<HTMLButtonElement, SlideButtonProps>(
           />
         )}
         
+        {/* Text Prompt */}
         {!completed && (
           <motion.div 
-            style={{ clipPath }}
+            style={{ opacity: textOpacity }}
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
           >
-            <span className="text-white/40 text-[10px] font-medium tracking-[0.3em] uppercase">
+            <span className="text-white/60 text-xs font-semibold tracking-[0.25em] uppercase">
               Slide to enter
             </span>
           </motion.div>
         )}
 
-
+        {/* Drag Handle Wrapper */}
         <AnimatePresence>
           {!completed && (
             <motion.div
-              ref={dragHandleRef}
               drag="x"
               dragConstraints={DRAG_CONSTRAINTS}
-              dragElastic={0} // Remove elastic to prevent shaking/jitter
+              dragElastic={0.05}
               dragMomentum={false}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
-              style={{ x: dragX }} // Use raw dragX for the handle to eliminate spring jitter
+              style={{ x: dragX }}
               className="absolute left-1 z-10 flex cursor-grab items-center justify-start active:cursor-grabbing"
             >
               <motion.div
                 animate={{
-                  scale: isDragging ? 1.05 : 1,
+                  scale: isDragging ? 1.1 : 1,
+                  rotate: isDragging ? 5 : 0,
                 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                transition={ANIMATION_CONFIG.spring}
               >
                 <Button
                   ref={ref}
@@ -216,41 +194,31 @@ const SlideButton = forwardRef<HTMLButtonElement, SlideButtonProps>(
                   {...props}
                   size="icon"
                   className={cn(
-                    "h-12 w-12 rounded-full bg-white text-black hover:bg-white border-none shadow-md transition-shadow",
-                    isDragging && "shadow-xl",
+                    "h-14 w-14 rounded-full bg-white text-black hover:bg-white border-none shadow-lg transition-shadow",
+                    isDragging && "shadow-2xl brightness-110",
                     className
                   )}
                 >
-                  <SendHorizontal className="size-5" />
+                  <SendHorizontal className="size-6 transition-transform group-hover:translate-x-0.5" />
                 </Button>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
 
-
+        {/* Success/Loading State Container */}
         <AnimatePresence mode="wait">
           {completed && (
             <motion.div
               className="absolute inset-0 flex items-center justify-center"
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              exit={{ opacity: 0, scale: 0.5 }}
               transition={ANIMATION_CONFIG.soft}
             >
-              <Button
-                ref={ref}
-                disabled={status === "loading"}
-                {...props}
-                className={cn(
-                  "h-full w-full rounded-full bg-white text-black hover:bg-white border-none shadow-xl",
-                  className
-                )}
-              >
-                <AnimatePresence mode="wait">
-                  <StatusIcon status={status} />
-                </AnimatePresence>
-              </Button>
+              <div className="flex items-center justify-center w-full h-full text-black">
+                <StatusIcon status={status} />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

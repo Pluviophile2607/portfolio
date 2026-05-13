@@ -18,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 
+import { SmoothScroll } from "@/components/ui/smooth-scroll";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +32,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-black" suppressHydrationWarning>
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

@@ -128,3 +128,16 @@
     @apply font-sans;
   }
 }
+
+.service-card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.service-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}

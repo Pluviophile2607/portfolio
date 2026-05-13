@@ -1,313 +1,272 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
 import { Paintbrush, Code2, Layout, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Grainient from "./grainient";
-import Globe from "./globe";
-import Silk from "./silk";
-import { prepareWithSegments, layoutWithLines } from "@chenglou/pretext";
-import { useGSAP } from "@gsap/react";
+import LightPillar from "./LightPillar";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface BentoCardProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  className?: string;
-  index: number;
-  image?: string;
-  imageLayout?: 'top' | 'bottom' | 'left';
-  gridRef: React.RefObject<HTMLDivElement | null>;
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
 }
 
-const BentoCard = ({ title, description, icon, className, index, image, gridRef }: BentoCardProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [globalData, setGlobalData] = useState({ 
-    globalSize: { width: 1, height: 1 }, 
-    cardOffset: { x: 0, y: 0 } 
-  });
+interface ServiceCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactElement<{ className?: string }> | null;
+  index: number;
+  image?: string;
+  bgColor: string;
+  textColor: string;
+  number: string;
+}
 
-  useEffect(() => {
-    if (!containerRef.current || !gridRef.current) return;
-    
-    const updateLayout = () => {
-      if (!containerRef.current || !gridRef.current) return;
-      const grid = gridRef.current;
-      const card = containerRef.current;
-      
-      setGlobalData({
-        globalSize: { 
-          width: grid.offsetWidth || 1, 
-          height: grid.offsetHeight || 1 
-        },
-        cardOffset: { x: card.offsetLeft, y: 0 }
-      });
-      setContainerWidth(card.offsetWidth);
-    };
-
-    updateLayout();
-    
-    const ro = new ResizeObserver(updateLayout);
-    ro.observe(gridRef.current);
-    window.addEventListener('resize', updateLayout);
-    
-    const timer = setTimeout(updateLayout, 100);
-    return () => {
-      window.removeEventListener('resize', updateLayout);
-      ro.disconnect();
-      clearTimeout(timer);
-    };
-  }, [gridRef]);
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const preparedDesc = useMemo(() => {
-    if (!mounted) return null;
-    return prepareWithSegments(description, "bold 16px Inter, sans-serif");
-  }, [description, mounted]);
-
-  const preparedTitle = useMemo(() => {
-    if (!mounted) return null;
-    const fontSize = title === "What I Offer" ? "24px" : "20px";
-    return prepareWithSegments(title, `bold ${fontSize} Inter, sans-serif`);
-  }, [title, mounted]);
-
-  const titleLayout = useMemo(() => {
-    if (!mounted || !preparedTitle || containerWidth === 0) return null;
-    return layoutWithLines(preparedTitle, containerWidth, 32);
-  }, [preparedTitle, containerWidth, mounted]);
-
-  const getEmoji = (title: string) => {
-    switch (title) {
-      case "UI/UX Design": return " 🎨";
-      case "Web Development": return " 💻";
-      case "Branding & Identity": return " 🌟";
-      case "Prototyping": return " 🚀";
-      default: return "";
-    }
-  };
-
+const ServiceCard = ({
+  title,
+  description,
+  icon,
+  image,
+  bgColor,
+  textColor,
+  number,
+}: ServiceCardProps) => {
   return (
-    <motion.div
-      ref={containerRef}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={cn(
-        "group relative overflow-hidden rounded-[1.5rem] border border-white/10 p-6 flex flex-col min-h-[350px] md:min-h-[250px] backdrop-blur-xl",
-        className
-      )}
+    <div
+      style={{ backgroundColor: bgColor }}
+      // Added `will-change-transform` for GPU hardware acceleration to eliminate scroll stutter
+      className="service-card group relative overflow-hidden rounded-[1px] p-6 md:p-10 w-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex flex-col justify-between shadow-2xl will-change-transform"
     >
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        {isMobile ? (
-          <Silk
-            speed={5}
-            scale={1}
-            color="#ffc300"
-            noiseIntensity={1.5}
-            rotation={0}
-          />
-        ) : (
-          <Grainient
-            color1="#EAB308"
-            color2="#41366b"
-            color3="#7C3AED"
-            timeSpeed={1.05}
-            colorBalance={-0.08}
-            warpStrength={1}
-            warpFrequency={5.9}
-            warpSpeed={1.9}
-            warpAmplitude={41}
-            blendAngle={83}
-            blendSoftness={0.11}
-            rotationAmount={660}
-            noiseScale={0.4}
-            grainAmount={0.03}
-            grainScale={2}
-            grainAnimated={false}
-            contrast={1.8}
-            gamma={1}
-            saturation={1}
-            centerX={0}
-            centerY={0}
-            zoom={2.5}
-            globalSize={globalData.globalSize}
-            cardOffset={globalData.cardOffset}
-          />
-        )}
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-50" />
-      
-      <div className="relative z-10 flex flex-col h-full">
-        {icon && (
-          <div className="mb-12 flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.05] border border-white/10 text-zinc-300 shadow-sm">
-            {icon}
-          </div>
-        )}
-        
-        <div className="flex flex-col flex-grow">
-          <h3 className={cn(
-            "mb-3 tracking-tight text-white font-bold",
-            title === "What I Offer" ? "text-3xl" : "text-2xl"
-          )}>
-            {title === "What I Offer" ? (
-              <div className="flex items-center gap-2">
-                <span>💼 What I <span className="text-blue-400">Offer</span></span>
-              </div>
-            ) : (
-              <>
-                {titleLayout ? titleLayout.lines.map((line: any, i: number) => (
-                  <div key={i}>
-                    {line.text}
-                    {i === titleLayout.lines.length - 1 && getEmoji(title)}
-                  </div>
-                )) : title}
-              </>
-            )}
-          </h3>
-          <div 
-            className="text-zinc-900 leading-relaxed text-base font-bold"
-          >
-            {description}
-          </div>
+      {/* Dark overlay — fades in via GSAP */}
+      <div className="card-overlay absolute inset-0 bg-black rounded-[1px] opacity-0 pointer-events-none z-20" />
+
+      {/* Top Section */}
+      <div className="flex justify-between items-start z-10 relative">
+        <h3
+          className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.8] uppercase max-w-[70%]"
+          style={{ color: textColor }}
+        >
+          {title}
+        </h3>
+        <div className="shrink-0 opacity-80" style={{ color: textColor }}>
+          {icon ? (
+            React.cloneElement(icon, {
+              className: "w-6 h-6 md:w-10 md:h-10",
+            })
+          ) : (
+            <Sparkles className="w-6 h-6 md:w-10 md:h-10" />
+          )}
         </div>
+      </div>
+
+      {/* Middle/Right Section */}
+      <div className="flex justify-end items-center gap-4 md:gap-10 z-10 my-4 md:my-0">
+        <span
+          className="text-5xl md:text-7xl lg:text-[8rem] font-medium tracking-tighter opacity-90 leading-none"
+          style={{ color: textColor }}
+        >
+          ({number})
+        </span>
 
         {image && (
-          <div className={cn(
-            "flex mix-blend-screen opacity-80",
-            "mt-4 justify-end h-24 sm:h-32"
-          )}>
-            <img 
-              src={image} 
-              alt={title} 
-              className="max-h-full max-w-full object-contain" 
+          <div className="service-media w-32 md:w-48 lg:w-64 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl transform rotate-2 group-hover:rotate-0 transition-all duration-700 ease-out shrink-0">
+            <img
+              src={image}
+              alt={title}
+              className="service-media-img w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 scale-110 group-hover:scale-100 transition-all duration-700"
             />
           </div>
         )}
-
-        {title === "What I Offer" && (
-          <div className="absolute -bottom-12 sm:bottom-0 left-0 right-0 h-80 sm:h-96 flex items-center justify-center overflow-visible">
-            <Globe />
-          </div>
-        )}
       </div>
-    </motion.div>
+
+      {/* Bottom Section */}
+      <div className="max-w-[320px] md:max-w-[450px] z-10">
+        <p
+          className="text-sm md:text-lg font-medium leading-tight opacity-80"
+          style={{ color: textColor }}
+        >
+          {description}
+        </p>
+      </div>
+
+      {/* Grain Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-10">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat opacity-100" />
+      </div>
+    </div>
   );
 };
 
-interface Service {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  className?: string;
-  image?: string;
-  imageLayout?: 'top' | 'bottom' | 'left';
-}
-
 export function ServicesBento() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  useGSAP(
+    () => {
+      if (!containerRef.current) return;
 
-  useGSAP(() => {
-    if (!isMobile || !containerRef.current || !gridRef.current) return;
+      const wrappers = gsap.utils.toArray<HTMLElement>(
+        ".card-wrapper",
+        containerRef.current
+      );
 
-    const grid = gridRef.current;
-    const scrollWidth = grid.scrollWidth;
-    const windowWidth = window.innerWidth;
-    const scrollAmount = scrollWidth - windowWidth + 48; // Adjust for horizontal padding
+      wrappers.forEach((wrapper, i) => {
+        const isLast = i === wrappers.length - 1;
+        const card = wrapper.querySelector(".service-card");
+        const overlay = wrapper.querySelector(".card-overlay");
 
-    const ctx = gsap.context(() => {
-      gsap.to(grid, {
-        x: -scrollAmount,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
+        // 1. Pinning the Cards (Including the last one for a smooth transition to next section)
+        ScrollTrigger.create({
+          trigger: wrapper,
+          start: "top top",
+          endTrigger: containerRef.current,
+          end: "bottom bottom",
           pin: true,
-          scrub: 1,
-          start: "center center",
-          end: () => `+=${scrollWidth}`,
-          invalidateOnRefresh: true,
+          pinSpacing: false,
+          id: `pin-${i}`,
+        });
+
+        if (!isLast) {
+          // 2. Smooth Animating Transitions via Timeline
+          const nextWrapper = wrappers[i + 1];
+          const rotationDir = i % 2 === 0 ? -4 : 4; 
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: nextWrapper,
+              start: "top bottom",
+              end: "top top",
+              // Tighter scrub: 0.5 feels responsive but not laggy. It settles quickly after scroll release.
+              scrub: 0.5, 
+            },
+          });
+
+          tl.to(card, {
+            scale: 0.88, // slightly softer scale
+            rotation: rotationDir,
+            transformOrigin: "top center",
+            // power2.inOut makes the movement organic. It eases into the shrink and eases into the final resting place.
+            ease: "power2.inOut", 
+          }, 0); 
+
+          if (overlay) {
+            tl.to(overlay, {
+              opacity: 0.75,
+              ease: "power2.inOut",
+            }, 0); 
+          }
         }
       });
-    }, containerRef);
 
-    return () => ctx.revert();
-  }, [isMobile]);
+      // Refresh ScrollTrigger after images load
+      const images = containerRef.current.querySelectorAll("img");
+      let loadedCount = 0;
+      const totalImages = images.length;
 
-  const services: Service[] = [
+      if (totalImages === 0) {
+        ScrollTrigger.refresh();
+      } else {
+        const tryRefresh = () => {
+          loadedCount++;
+          if (loadedCount >= totalImages) ScrollTrigger.refresh();
+        };
+
+        images.forEach((img) => {
+          if (img.complete) {
+            tryRefresh();
+          } else {
+            img.addEventListener("load", tryRefresh, { once: true });
+            img.addEventListener("error", tryRefresh, { once: true });
+          }
+        });
+      }
+    },
+    { scope: containerRef }
+  );
+
+  const services = [
     {
-      title: "UI/UX Design",
-      description: "Crafting user-friendly and visually engaging interfaces that deliver exceptional experiences.",
-      icon: <Paintbrush className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 w-[85vw] md:w-auto shrink-0",
+      title: "UI/UX DESIGN",
+      description:
+        "Crafting user-friendly and visually engaging interfaces that deliver exceptional experiences through deep user research and modern design principles.",
+      icon: <Paintbrush />,
+      image: "/assets/services/ui-ux.png",
+      bgColor: "#A3E635",
+      textColor: "#1A3001",
+      number: "01",
     },
     {
-      title: "Branding & Identity",
-      description: "Designing cohesive and impactful brand identities to help you stand out.",
-      icon: <Layout className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 md:col-start-3 w-[85vw] md:w-auto shrink-0",
+      title: "BRANDING",
+      description:
+        "Designing cohesive and impactful brand identities to help you stand out in a crowded market, ensuring consistency across all touchpoints.",
+      icon: <Layout />,
+      image: "/assets/services/branding.png",
+      bgColor: "#60A5FA",
+      textColor: "#082F49",
+      number: "02",
     },
     {
-      title: "What I Offer",
-      description: "From intuitive UI/UX design to seamless website development, I create digital solutions tailored to your needs. Let's turn your ideas into impactful experiences!",
+      title: "COLLABORATION",
+      description:
+        "From intuitive UI/UX design to seamless website development, I create digital solutions tailored to your specific business needs and goals.",
       icon: null,
-      className: "md:col-span-2 md:row-span-4 md:col-start-5 min-h-[500px] md:min-h-0 w-[85vw] md:w-auto shrink-0",
+      image: "/assets/services/collaboration.png",
+      bgColor: "#111111",
+      textColor: "#FFFFFF",
+      number: "03",
     },
     {
-      title: "Web Development",
-      description: "Building responsive, high-performing websites with modern tools and technologies.",
-      icon: <Code2 className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 md:row-start-3 w-[85vw] md:w-auto shrink-0",
+      title: "DEVELOPMENT",
+      description:
+        "Building responsive, high-performing websites with modern tools and technologies like React, Next.js, and Framer Motion.",
+      icon: <Code2 />,
+      image: "/assets/services/web-dev.png",
+      bgColor: "#FB923C",
+      textColor: "#431407",
+      number: "04",
     },
     {
-      title: "Prototyping",
-      description: "Turning ideas into interactive prototypes to visualize functionality and user flow effectively.",
-      icon: <Sparkles className="w-6 h-6 text-zinc-300" />,
-      className: "md:col-span-2 md:row-span-2 md:col-start-3 md:row-start-3 w-[85vw] md:w-auto shrink-0",
+      title: "PROTOTYPING",
+      description:
+        "Turning ideas into interactive prototypes to visualize functionality and user flow effectively before moving into full-scale development.",
+      icon: <Sparkles />,
+      image: "/assets/services/prototyping.png",
+      bgColor: "#C084FC",
+      textColor: "#2E1065",
+      number: "05",
     },
   ];
 
   return (
-    <section ref={containerRef} className="bg-black relative overflow-hidden flex items-center min-h-[600px] md:min-h-0">
-      <div className="mx-auto max-w-7xl px-6 w-full h-full flex items-center">
-        <div 
-          ref={gridRef} 
-          className={cn(
-            "gap-3 md:gap-4 transition-all w-full",
-            isMobile ? "flex flex-nowrap" : "grid grid-cols-1 md:grid-cols-6 md:grid-rows-4 md:h-[650px]"
-          )}
-        >
-          {services.map((service, index) => {
-            const syncIndex = index > 2 ? index - 3 : index;
-            return <BentoCard key={index} {...service} index={syncIndex} gridRef={gridRef} />;
-          })}
-        </div>
+    <section
+      ref={containerRef}
+      className="bg-black relative overflow-visible pt-0 pb-10 md:pb-32 z-10"
+    >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <LightPillar
+          topColor="#5227FF"
+          bottomColor="#FF9FFC"
+          intensity={0.35}
+          rotationSpeed={0.04}
+          glowAmount={0.001}
+          pillarWidth={5.0}
+          pillarHeight={0.15}
+          noiseIntensity={0.2}
+          pillarRotation={0}
+          interactive={false}
+          mixBlendMode="screen"
+        />
+      </div>
+
+      <div className="w-full px-0 relative z-10 flex flex-col">
+        {services.map((service, index) => (
+          <div
+            key={service.number}
+            className="card-wrapper w-full h-screen flex items-center justify-center p-4"
+            style={{ zIndex: index + 1 }}
+          >
+            <ServiceCard {...service} index={index} />
+          </div>
+        ))}
       </div>
     </section>
   );
