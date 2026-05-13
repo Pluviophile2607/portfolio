@@ -22,11 +22,11 @@ import { Check, Loader2, SendHorizontal, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button, ButtonProps } from "@/components/ui/button"
 
-const DRAG_CONSTRAINTS = { left: 0, right: 190 }
+const DRAG_CONSTRAINTS = { left: 0, right: 222 }
 const DRAG_THRESHOLD = 0.85
 
 const BUTTON_STATES = {
-  initial: { width: "16rem", opacity: 1 },
+  initial: { width: "18rem", opacity: 1 },
   completed: { width: "4rem", opacity: 1 },
 }
 
@@ -160,9 +160,9 @@ const SlideButton = forwardRef<HTMLButtonElement, SlideButtonProps>(
         {!completed && (
           <motion.div 
             style={{ opacity: textOpacity }}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 whitespace-nowrap"
           >
-            <span className="text-white/60 text-xs font-semibold tracking-[0.25em] uppercase">
+            <span className="text-white/60 text-xs font-semibold tracking-[0.25em] uppercase ml-[0.125em]">
               Slide to enter
             </span>
           </motion.div>
@@ -179,7 +179,7 @@ const SlideButton = forwardRef<HTMLButtonElement, SlideButtonProps>(
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               style={{ x: dragX }}
-              className="absolute left-1 z-10 flex cursor-grab items-center justify-start active:cursor-grabbing"
+              className="absolute left-1 z-20 flex cursor-grab items-center justify-start active:cursor-grabbing"
             >
               <motion.div
                 animate={{

@@ -19,6 +19,9 @@ export const metadata: Metadata = {
 
 
 import { SmoothScroll } from "@/components/ui/smooth-scroll";
+import { FullscreenMenu } from "@/components/ui/fullscreen-menu";
+import { LoadingProvider } from "@/context/loading-context";
+import { LoadingWrapper } from "@/components/loading-wrapper";
 
 export default function RootLayout({
   children,
@@ -33,7 +36,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-black" suppressHydrationWarning>
         <SmoothScroll>
-          {children}
+          <LoadingProvider>
+            <LoadingWrapper>
+              <FullscreenMenu>
+                {children}
+              </FullscreenMenu>
+            </LoadingWrapper>
+          </LoadingProvider>
         </SmoothScroll>
       </body>
     </html>

@@ -22,10 +22,10 @@ const Globe: React.FC = () => {
           <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-[40px] transition-opacity duration-1000 group-hover:opacity-100 opacity-50" />
           
           <motion.div
-            initial={{ rotate: 23.5 }} // Actual Earth axial tilt
-            className="relative w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] rounded-full overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.2),-5px_0_8px_#c3f4ff_inset,15px_2px_25px_#000_inset,-24px_-2px_34px_#c3f4ff99_inset,250px_0_44px_#00000066_inset,150px_0_38px_#000000aa_inset]"
+            initial={{ rotate: 23.5 }}
+            className="relative w-[280px] h-[280px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] rounded-full overflow-hidden shadow-[0_0_50px_rgba(59,130,246,0.2),-5px_0_8px_#c3f4ff_inset,15px_2px_25px_#000_inset,-24px_-2px_34px_#c3f4ff99_inset,250px_0_44px_#00000066_inset,150px_0_38px_#000000aa_inset]"
             style={{
-              background: "black",
+              background: "radial-gradient(circle at 30% 30%, #1a1a1a 0%, #000 100%)",
             }}
           >
             {/* Texture Container for Seamless Loop */}

@@ -35,7 +35,7 @@ const ServiceCard = ({
     <div
       style={{ backgroundColor: bgColor }}
       // Added `will-change-transform` for GPU hardware acceleration to eliminate scroll stutter
-      className="service-card group relative overflow-hidden rounded-[1px] p-6 md:p-10 w-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex flex-col justify-between shadow-2xl will-change-transform"
+      className="service-card group relative overflow-hidden rounded-[1px] p-5 md:p-10 w-full min-h-[380px] md:min-h-[500px] lg:min-h-[600px] flex flex-col justify-between shadow-2xl will-change-transform"
     >
       {/* Dark overlay — fades in via GSAP */}
       <div className="card-overlay absolute inset-0 bg-black rounded-[1px] opacity-0 pointer-events-none z-20" />
@@ -43,7 +43,7 @@ const ServiceCard = ({
       {/* Top Section */}
       <div className="flex justify-between items-start z-10 relative">
         <h3
-          className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.8] uppercase max-w-[70%]"
+          className="text-3xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.8] uppercase max-w-[80%] md:max-w-[70%]"
           style={{ color: textColor }}
         >
           {title}
@@ -62,14 +62,14 @@ const ServiceCard = ({
       {/* Middle/Right Section */}
       <div className="flex justify-end items-center gap-4 md:gap-10 z-10 my-4 md:my-0">
         <span
-          className="text-5xl md:text-7xl lg:text-[8rem] font-medium tracking-tighter opacity-90 leading-none"
+          className="text-4xl md:text-7xl lg:text-[8rem] font-medium tracking-tighter opacity-90 leading-none"
           style={{ color: textColor }}
         >
           ({number})
         </span>
 
         {image && (
-          <div className="service-media w-32 md:w-48 lg:w-64 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl transform rotate-2 group-hover:rotate-0 transition-all duration-700 ease-out shrink-0">
+          <div className="service-media w-24 md:w-48 lg:w-64 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl transform rotate-2 group-hover:rotate-0 transition-all duration-700 ease-out shrink-0">
             <img
               src={image}
               alt={title}
@@ -261,7 +261,7 @@ export function ServicesBento() {
         {services.map((service, index) => (
           <div
             key={service.number}
-            className="card-wrapper w-full h-screen flex items-center justify-center p-4"
+            className="card-wrapper w-full h-[90vh] md:h-screen flex items-center justify-center p-2 md:p-4"
             style={{ zIndex: index + 1 }}
           >
             <ServiceCard {...service} index={index} />

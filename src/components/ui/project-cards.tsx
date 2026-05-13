@@ -6,45 +6,8 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { LiquidMetalButton } from "./liquid-metal-button";
 
-interface Project {
-  id: number;
-  title: string;
-  image: string;
-  category: string;
-}
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "Tera Mera",
-    image: "https://cdn.designfast.io/image/2026-05-12/68fe2048-7a5e-4d55-93f0-afa87ac6cac8.jpeg",
-    category: "Web Site"
-  },
-  {
-    id: 2,
-    title: "ZED NGO",
-    image: "https://cdn.designfast.io/image/2026-05-12/65c81e50-890b-493e-87e0-9e30235ebd8b.jpeg",
-    category: "Web Site"
-  },
-  {
-    id: 3,
-    title: "Swastik Power Project",
-    image: "https://cdn.designfast.io/image/2026-05-12/b3422204-bfdf-4e52-a78c-1c2a0c30dfdb.jpeg",
-    category: "Web Site"
-  },
-  {
-    id: 4,
-    title: "Aiz-Boostr",
-    image: "https://cdn.designfast.io/image/2026-05-12/c82e986e-a9a9-4479-a8d4-e682a8373f9e.jpeg",
-    category: "Web Site"
-  },
-  {
-    id: 5,
-    title: "Adhyan Academy",
-    image: "https://cdn.designfast.io/image/2026-05-12/6e0fd967-264b-42f0-a290-ae688a332895.jpeg",
-    category: "Web Site"
-  }
-];
+import { projects } from "@/lib/projects";
+import Link from "next/link";
 
 export function ProjectCards() {
   const marqueeProjects = [...projects, ...projects, ...projects];
@@ -53,7 +16,7 @@ export function ProjectCards() {
   const trackRef = useRef<HTMLDivElement>(null);
   
   // Base speed for the marquee
-  const baseSpeed = -0.5; 
+  const baseSpeed = -0.8; 
   const isDragging = useRef(false);
 
   useAnimationFrame(() => {
@@ -77,7 +40,7 @@ export function ProjectCards() {
   });
 
   return (
-    <section className="bg-black pt-8 pb-24 overflow-hidden relative">
+    <section className="bg-black pt-12 pb-24 overflow-hidden relative">
       {/* Header Button */}
       <div className="w-full flex justify-center mb-8 relative z-20">
         <LiquidMetalButton label="Projects" />
@@ -108,9 +71,10 @@ export function ProjectCards() {
           }}
         >
           {marqueeProjects.map((project, index) => (
-            <div
+            <Link
               key={`${project.id}-${index}`}
-              className="group pointer-events-none flex-shrink-0 w-[320px] md:w-[600px]"
+              href={`/projects/${project.slug}`}
+              className="group cursor-pointer flex-shrink-0 w-[320px] md:w-[600px] pointer-events-auto"
             >
               <div className="relative aspect-[1672/941] rounded-[2rem] overflow-hidden bg-[#111] p-3 border border-white/5 shadow-2xl transition-all duration-500 group-hover:border-white/10 group-hover:bg-[#151515]">
                 {/* Main Image Container */}
@@ -140,7 +104,7 @@ export function ProjectCards() {
                   <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 text-white transition-colors duration-500 group-hover:text-black" />
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </motion.div>
       </div>
