@@ -8,7 +8,7 @@ import { SiN8N } from "react-icons/si";
 
 export function NewGridSection() {
   return (
-    <section className="bg-black px-6 mt-0 md:mt-20 pt-0 pb-20 relative z-40">
+    <section className="bg-black px-6 py-20 relative overflow-hidden">
       <div className="mx-auto max-w-7xl relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-5 grid-rows-1 md:grid-rows-4 gap-2 h-auto md:h-[500px]">
           {/* div1 */}
@@ -88,6 +88,8 @@ export function NewGridSection() {
               </p>
             </div>
           </div>
+
+
         </div>
       </div>
     </section>
