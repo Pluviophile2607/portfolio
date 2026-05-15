@@ -43,6 +43,8 @@ const fragmentShader = `
 varying vec2 vUv;
 varying vec3 vPosition;
 
+precision mediump float;
+
 uniform float uTime;
 uniform vec3  uColor;
 uniform float uSpeed;
@@ -87,9 +89,10 @@ void main() {
 
 interface SilkPlaneProps {
   uniforms: SilkUniforms;
+  isVisible: boolean;
 }
 
-const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms }, ref) {
+const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms, isVisible }, ref) {
   const { viewport } = useThree();
 
   useLayoutEffect(() => {
@@ -101,7 +104,7 @@ const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms
 
   useFrame((_state: RootState, delta: number) => {
     const mesh = ref as React.MutableRefObject<Mesh | null>;
-    if (mesh.current) {
+    if (mesh.current && isVisible) {
       const material = mesh.current.material as ShaderMaterial & {
         uniforms: SilkUniforms;
       };
@@ -124,10 +127,22 @@ export interface SilkProps {
   color?: string;
   noiseIntensity?: number;
   rotation?: number;
+  className?: string;
 }
 
-const Silk: React.FC<SilkProps> = ({ speed = 5, scale = 1, color = '#7B7481', noiseIntensity = 1.5, rotation = 0 }) => {
+const Silk: React.FC<SilkProps> = ({ speed = 5, scale = 1, color = '#7B7481', noiseIntensity = 1.5, rotation = 0, className = "" }) => {
   const meshRef = useRef<Mesh>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, { threshold: 0 });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const uniforms = useMemo<SilkUniforms>(
     () => ({
@@ -142,9 +157,11 @@ const Silk: React.FC<SilkProps> = ({ speed = 5, scale = 1, color = '#7B7481', no
   );
 
   return (
-    <Canvas dpr={[1, 2]} frameloop="always">
-      <SilkPlane ref={meshRef} uniforms={uniforms} />
-    </Canvas>
+    <div ref={containerRef} className={`w-full h-full ${className}`}>
+      <Canvas dpr={[1, 1.5]} frameloop="always">
+        <SilkPlane ref={meshRef} uniforms={uniforms} isVisible={isVisible} />
+      </Canvas>
+    </div>
   );
 };
 

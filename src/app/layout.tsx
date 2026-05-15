@@ -22,6 +22,7 @@ import { SmoothScroll } from "@/components/ui/smooth-scroll";
 import { FullscreenMenu } from "@/components/ui/fullscreen-menu";
 import { LoadingProvider } from "@/context/loading-context";
 import { LoadingWrapper } from "@/components/loading-wrapper";
+import { ConsoleSuppressor } from "@/components/console-suppressor";
 
 export default function RootLayout({
   children,
@@ -35,6 +36,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-black" suppressHydrationWarning>
+        <ConsoleSuppressor />
         <SmoothScroll>
           <LoadingProvider>
             <LoadingWrapper>

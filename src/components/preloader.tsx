@@ -10,8 +10,10 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
   const [loading, setLoading] = useState(true)
 
   const hasPlayedRef = useRef(false)
+  const isMounted = useRef(false)
 
   useEffect(() => {
+    isMounted.current = true
     setMounted(true)
     
     // Prevent scrolling while preloader is active
@@ -19,7 +21,7 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
 
     // Create audio object
     const audio = new Audio("/assets/sound/whoosh-sound-mp3.mp3")
-    audio.volume = 0.4
+    audio.volume = 0.65
     audio.preload = "auto"
 
     const playWhoosh = () => {
@@ -44,6 +46,7 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
 
 
     return () => {
+      isMounted.current = false
       clearTimeout(startTimer)
       clearTimeout(exitTimer)
       document.body.style.overflow = ""
@@ -57,7 +60,11 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
     <AnimatePresence
       onExitComplete={() => {
         document.body.style.overflow = ""
-        if (onComplete) onComplete()
+        // Check if the component is still mounted (or was until unmount started)
+        // to safely call the parent's completion handler.
+        if (onComplete) {
+          onComplete()
+        }
       }}
     >
       {loading && (

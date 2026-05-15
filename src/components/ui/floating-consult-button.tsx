@@ -30,6 +30,7 @@ interface FloatingConsultButtonProps {
 
   // Visibility
   isVisible?: boolean;
+  className?: string;
 }
 
 export const FloatingConsultButton = ({
@@ -46,6 +47,7 @@ export const FloatingConsultButton = ({
   ctaButtonAction = () => console.log("CTA clicked"),
   position = { bottom: "2rem", right: "2rem" },
   isVisible = true,
+  className = "",
 }: FloatingConsultButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   
@@ -141,7 +143,7 @@ export const FloatingConsultButton = ({
       <AnimatePresence>
         {isVisible && (
           <motion.div 
-            className="fixed z-[50]"
+            className={`fixed z-[50] ${className}`}
             style={position}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

@@ -14,6 +14,7 @@ export interface Project {
   value?: string;
   timeline?: string;
   fullDescription?: string;
+  liveUrl?: string;
 }
 
 export const projects: Project[] = [
@@ -32,12 +33,13 @@ export const projects: Project[] = [
     client: "Tera Mera Community",
     year: "2026",
     role: "Full Stack Development & UI/UX Design",
-    tags: ["Next.js", "Tailwind CSS", "Framer Motion", "Supabase"]
+    tags: ["Next.js", "Tailwind CSS", "Framer Motion", "Supabase"],
+    liveUrl: "https://teramera.space/"
   },
   {
     id: 2,
     slug: "zed-ngo",
-    title: "ZED NGO",
+    title: "Zed Aid",
     image: "https://cdn.designfast.io/image/2026-05-12/65c81e50-890b-493e-87e0-9e30235ebd8b.jpeg",
     category: "Web Site",
     description: "Digital presence for Zero Effect Development, an NGO focused on sustainable growth.",
@@ -48,12 +50,13 @@ export const projects: Project[] = [
     client: "ZED Organization",
     year: "2025",
     role: "Web Design & Development",
-    tags: ["React", "GSAP", "Three.js", "Sustainable Design"]
+    tags: ["React", "GSAP", "Three.js", "Sustainable Design"],
+    liveUrl: "https://blue-gull-275507.hostingersite.com/"
   },
   {
     id: 3,
     slug: "swastik-power",
-    title: "Swastik Power",
+    title: "Swastik Power Pro",
     image: "https://cdn.designfast.io/image/2026-05-12/b3422204-bfdf-4e52-a78c-1c2a0c30dfdb.jpeg",
     category: "Web Site",
     description: "Industrial power solutions showcase with interactive product catalogs and technical specs.",
@@ -64,12 +67,13 @@ export const projects: Project[] = [
     client: "Swastik Power Systems",
     year: "2025",
     role: "Frontend Development",
-    tags: ["Next.js", "TypeScript", "Motion", "Industrial Design"]
+    tags: ["Next.js", "TypeScript", "Motion", "Industrial Design"],
+    liveUrl: "https://swastikpowerpro.com/"
   },
   {
     id: 4,
     slug: "aiz-boostr",
-    title: "Aiz-Boostr",
+    title: "Aizboostr",
     image: "https://cdn.designfast.io/image/2026-05-12/c82e986e-a9a9-4479-a8d4-e682a8373f9e.jpeg",
     category: "SaaS Platform",
     description: "AI-powered marketing automation platform helping small businesses scale their reach.",
@@ -80,7 +84,8 @@ export const projects: Project[] = [
     client: "Aiz-Boostr AI",
     year: "2026",
     role: "Product Design",
-    tags: ["AI Integration", "React", "Dashboard", "SaaS"]
+    tags: ["AI Integration", "React", "Dashboard", "SaaS"],
+    liveUrl: "https://aizboostr.com/"
   },
   {
     id: 5,
@@ -96,6 +101,7 @@ export const projects: Project[] = [
     client: "Adhyan Education",
     year: "2024",
     role: "Full Stack Development",
-    tags: ["LMS", "Next.js", "Node.js", "Database Design"]
+    tags: ["LMS", "Next.js", "Node.js", "Database Design"],
+    liveUrl: "https://adhyanacademy.in/"
   }
 ];

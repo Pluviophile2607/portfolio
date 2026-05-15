@@ -24,6 +24,9 @@ export function LiquidMetalButton({
   const shaderMount = useRef<any>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const rippleId = useRef(0);
+  const isMounted = useRef(false);
+  const shaderTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rippleTimeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
   const dimensions = useMemo(() => {
     if (viewMode === "icon") {
@@ -48,6 +51,7 @@ export function LiquidMetalButton({
   }, [viewMode]);
 
   useEffect(() => {
+    isMounted.current = true;
     const styleId = "shader-canvas-style-exploded";
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
@@ -113,6 +117,11 @@ export function LiquidMetalButton({
     loadShader();
 
     return () => {
+      isMounted.current = false;
+      if (shaderTimeoutRef.current) clearTimeout(shaderTimeoutRef.current);
+      rippleTimeoutsRef.current.forEach(clearTimeout);
+      rippleTimeoutsRef.current.clear();
+      
       if (shaderMount.current?.destroy) {
         shaderMount.current.destroy();
         shaderMount.current = null;
@@ -134,12 +143,18 @@ export function LiquidMetalButton({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (shaderMount.current?.setSpeed) {
       shaderMount.current.setSpeed(2.4);
-      setTimeout(() => {
+      
+      if (shaderTimeoutRef.current) clearTimeout(shaderTimeoutRef.current);
+      
+      shaderTimeoutRef.current = setTimeout(() => {
+        if (!isMounted.current) return;
+        
         if (isHovered) {
           shaderMount.current?.setSpeed?.(1);
         } else {
           shaderMount.current?.setSpeed?.(0.6);
         }
+        shaderTimeoutRef.current = null;
       }, 300);
     }
 
@@ -150,9 +165,15 @@ export function LiquidMetalButton({
       const ripple = { x, y, id: rippleId.current++ };
 
       setRipples((prev) => [...prev, ripple]);
-      setTimeout(() => {
-        setRipples((prev) => prev.filter((r) => r.id !== ripple.id));
+      
+      const timeout = setTimeout(() => {
+        if (isMounted.current) {
+          setRipples((prev) => prev.filter((r) => r.id !== ripple.id));
+        }
+        rippleTimeoutsRef.current.delete(timeout);
       }, 600);
+      
+      rippleTimeoutsRef.current.add(timeout);
     }
 
     onClick?.();

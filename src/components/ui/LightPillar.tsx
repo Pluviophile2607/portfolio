@@ -68,14 +68,14 @@ const LightPillar: React.FC<LightPillarProps> = ({
     if (isMobile && quality !== 'low') effectiveQuality = 'low';
 
     const qualitySettings = {
-      low: { iterations: 24, waveIterations: 1, pixelRatio: 0.5, precision: 'mediump', stepMultiplier: 1.5 },
-      medium: { iterations: 40, waveIterations: 2, pixelRatio: 0.65, precision: 'mediump', stepMultiplier: 1.2 },
+      low: { iterations: 16, waveIterations: 1, pixelRatio: 0.5, precision: 'mediump', stepMultiplier: 1.8 },
+      medium: { iterations: 32, waveIterations: 2, pixelRatio: 0.65, precision: 'mediump', stepMultiplier: 1.4 },
       high: {
-        iterations: 80,
-        waveIterations: 4,
-        pixelRatio: Math.min(window.devicePixelRatio, 2),
+        iterations: 64,
+        waveIterations: 3,
+        pixelRatio: Math.min(window.devicePixelRatio, 1.5),
         precision: 'highp',
-        stepMultiplier: 1.0
+        stepMultiplier: 1.2
       }
     };
 
@@ -226,7 +226,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
           fieldDistance = -(min(-radialBound, -fieldDistance) - h * h * 0.25 / k);
           
           fieldDistance = abs(fieldDistance) * 0.15 + 0.01;
-
+ 
           vec3 gradient = mix(uBottomColor, uTopColor, smoothstep(15.0, -15.0, pos.y));
           color += gradient / fieldDistance;
 
@@ -294,6 +294,13 @@ const LightPillar: React.FC<LightPillarProps> = ({
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
+    // Visibility observer to pause when off-screen
+    let isVisible = true;
+    const io = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    }, { threshold: 0 });
+    io.observe(container);
+
     // Mouse interaction - throttled for performance
     let mouseMoveTimeout: number | null = null;
     const handleMouseMove = (event: MouseEvent) => {
@@ -325,7 +332,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
 
       const deltaTime = currentTime - lastTime;
 
-      if (deltaTime >= frameTime) {
+      if (isVisible && deltaTime >= frameTime) {
         timeRef.current += 0.016 * rotationSpeedRef.current;
         materialRef.current.uniforms.uTime.value = timeRef.current;
 
@@ -363,6 +370,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      io.disconnect();
       if (interactive) {
         container.removeEventListener('mousemove', handleMouseMove);
       }

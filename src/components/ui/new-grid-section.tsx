@@ -5,11 +5,42 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { FaInstagram, FaGithub, FaFigma, FaPinterest } from "react-icons/fa";
 import { SiN8N } from "react-icons/si";
+import Grainient from "./grainient";
+
+import { motion } from "framer-motion";
 
 export function NewGridSection() {
   return (
-    <section className="bg-black px-6 py-20 relative overflow-hidden">
-      <div className="mx-auto max-w-7xl relative z-10">
+    <section id="connected-section" className="px-6 py-20 relative overflow-hidden bg-transparent min-h-[600px] flex items-center z-20">
+      {/* Dynamic Grainient Background */}
+      <div className="absolute inset-0 z-0">
+        <Grainient
+          color1="#000B58"
+          color2="#003161"
+          color3="#006A67"
+          timeSpeed={1.25}
+          colorBalance={-0.15}
+          warpStrength={1.0}
+          warpFrequency={5.9}
+          warpSpeed={2.0}
+          warpAmplitude={50.0}
+          blendAngle={0.0}
+          blendSoftness={0.05}
+          rotationAmount={570}
+          noiseScale={2.0}
+          grainAmount={0.07}
+          grainScale={2.0}
+          grainAnimated={false}
+          contrast={1.5}
+          gamma={1.0}
+          saturation={1.0}
+          centerX={0.03}
+          centerY={-0.15}
+          zoom={1.05}
+        />
+      </div>
+
+      <div className="mx-auto max-w-7xl relative z-10 w-full">
         <div className="grid grid-cols-1 md:grid-cols-5 grid-rows-1 md:grid-rows-4 gap-2 h-auto md:h-[500px]">
           {/* div1 */}
           <div className="md:col-span-2 md:row-span-4 rounded-3xl bg-zinc-900/50 border border-white/5 p-8 flex flex-col min-h-[500px] md:min-h-0">

@@ -9,6 +9,8 @@ import { LiquidMetalButton } from "./liquid-metal-button";
 import { projects } from "@/lib/projects";
 import Link from "next/link";
 
+import ScrollReveal from "./ScrollReveal";
+
 export function ProjectCards() {
   const marqueeProjects = [...projects, ...projects, ...projects];
   const x = useMotionValue(0);
@@ -40,7 +42,7 @@ export function ProjectCards() {
   });
 
   return (
-    <section className="bg-black pt-12 pb-24 overflow-hidden relative">
+    <section className="bg-black pt-2 pb-24 overflow-hidden relative">
       {/* Header Button */}
       <div className="w-full flex justify-center mb-8 relative z-20">
         <LiquidMetalButton label="Projects" />
@@ -74,7 +76,7 @@ export function ProjectCards() {
             <Link
               key={`${project.id}-${index}`}
               href={`/projects/${project.slug}`}
-              className="group cursor-pointer flex-shrink-0 w-[320px] md:w-[600px] pointer-events-auto"
+              className="group cursor-pointer flex-shrink-0 w-[320px] md:w-[600px] pointer-events-auto flex flex-col"
             >
               <div className="relative aspect-[1672/941] rounded-[2rem] overflow-hidden bg-[#111] p-3 border border-white/5 shadow-2xl transition-all duration-500 group-hover:border-white/10 group-hover:bg-[#151515]">
                 {/* Main Image Container */}
@@ -91,16 +93,17 @@ export function ProjectCards() {
               </div>
 
               {/* Footer Info */}
-              <div className="mt-5 flex items-center justify-between px-3">
-                <div>
+              <div className="mt-5 flex items-start justify-between px-3">
+                <div className="max-w-[80%]">
                   <h3 className="text-white text-lg md:text-xl font-medium tracking-tight">
                     {project.title}
                   </h3>
                   <p className="text-white/40 text-xs md:text-sm mt-1 uppercase tracking-widest font-mono">
                     {project.category}
                   </p>
+                  
                 </div>
-                <div className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 group-hover:bg-white group-hover:border-white">
+                <div className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 group-hover:bg-white group-hover:border-white mt-1">
                   <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 text-white transition-colors duration-500 group-hover:text-black" />
                 </div>
               </div>
@@ -111,3 +114,4 @@ export function ProjectCards() {
     </section>
   );
 }
+

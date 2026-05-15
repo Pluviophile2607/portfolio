@@ -18,6 +18,8 @@ export function LoadingWrapper({ children }: { children: React.ReactNode }) {
   const lenis = useLenis();
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
     if (showIntro || isLoading) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
@@ -28,7 +30,7 @@ export function LoadingWrapper({ children }: { children: React.ReactNode }) {
       lenis?.start();
       
       // Force a resize/refresh to ensure Lenis recalculates page height
-      setTimeout(() => {
+      timer = setTimeout(() => {
         lenis?.resize();
         window.dispatchEvent(new Event("resize"));
       }, 500);
@@ -38,6 +40,7 @@ export function LoadingWrapper({ children }: { children: React.ReactNode }) {
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
       lenis?.start();
+      if (timer) clearTimeout(timer);
     };
   }, [showIntro, isLoading, lenis]);
 

@@ -46,7 +46,7 @@ export function Intro({ onEnter }: { onEnter: () => void }) {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
           className="mt-8 text-white/20 text-[10px] uppercase tracking-[0.3em] font-light"
         >
           Prithvi Portfolio &copy; 2026

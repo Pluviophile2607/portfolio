@@ -11,7 +11,7 @@ void main() {
 `;
 
 const FRAG = `#version 300 es
-precision highp float;
+precision mediump float;
 
 uniform float uTime;
 uniform float uAmplitude;
@@ -131,7 +131,8 @@ export default function Aurora(props: AuroraProps) {
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true
+      antialias: false,
+      dpr: Math.min(window.devicePixelRatio, 1.5)
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -177,9 +178,17 @@ export default function Aurora(props: AuroraProps) {
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(gl.canvas);
 
+    let isVisible = true;
+    const io = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    }, { threshold: 0 });
+    io.observe(ctn);
+
     let animateId = 0;
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
+      if (!isVisible) return;
+      
       const { time = t * 0.01, speed = 1.0 } = propsRef.current;
       if (program) {
         program.uniforms.uTime.value = time * speed * 0.1;
@@ -200,6 +209,7 @@ export default function Aurora(props: AuroraProps) {
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener('resize', resize);
+      io.disconnect();
       if (ctn && gl.canvas.parentNode === ctn) {
         ctn.removeChild(gl.canvas);
       }

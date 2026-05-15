@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -118,7 +119,9 @@ export function FullscreenMenu({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const [activeLink, setActiveLink] = useState(1); // Default to Projects
+  const pathname = usePathname();
+  const isProjectPage = pathname?.startsWith("/projects");
+  const barColor = isOpen ? "bg-white" : (isProjectPage ? "bg-black" : "bg-white");
   const isHidden = showIntro || isLoading;
 
   return (
@@ -131,19 +134,23 @@ export function FullscreenMenu({ children }: { children: React.ReactNode }) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed top-0 left-0 right-0 z-[110] px-6 md:px-12 py-8 flex justify-between items-center pointer-events-none"
+              className="fixed top-0 left-0 right-0 z-[110] px-6 md:px-12 pt-2 pb-8 flex justify-between items-center pointer-events-none"
             >
               <Link 
                 href="/" 
                 onClick={(e) => handleLinkClick(e, "/")}
                 className="pointer-events-auto relative flex items-center group"
               >
-                <div className="relative w-32 h-12 opacity-90 group-hover:opacity-100 transition-opacity">
+                <div className={cn(
+                  "relative w-32 h-12 opacity-90 group-hover:opacity-100 transition-opacity",
+                  isProjectPage && !isOpen ? "invert" : ""
+                )}>
                   <Image
                     src="/logo.png"
                     alt="Logo"
                     fill
                     priority
+                    sizes="128px"
                     className="object-contain"
                   />
                 </div>
@@ -155,11 +162,13 @@ export function FullscreenMenu({ children }: { children: React.ReactNode }) {
               >
                 <div className="relative w-8 h-8 flex flex-col items-center justify-center">
                   <span className={cn(
-                    "absolute w-6 h-0.5 bg-white transition-all duration-500",
+                    "absolute w-6 h-0.5 transition-all duration-500",
+                    barColor,
                     isOpen ? "rotate-45" : "-translate-y-1.5"
                   )} />
                   <span className={cn(
-                    "absolute w-6 h-0.5 bg-white transition-all duration-500",
+                    "absolute w-6 h-0.5 transition-all duration-500",
+                    barColor,
                     isOpen ? "-rotate-45" : "translate-y-1.5"
                   )} />
                 </div>

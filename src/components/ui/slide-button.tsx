@@ -79,14 +79,30 @@ const useButtonStatus = (resolveTo: "success" | "error", onSuccess?: () => void)
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle")
+  
+  const isMounted = useRef(false)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    isMounted.current = true
+    return () => {
+      isMounted.current = false
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const handleSubmit = useCallback(() => {
     setStatus("loading")
-    // Artificial delay for premium feel
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+
+    timeoutRef.current = setTimeout(() => {
+      if (!isMounted.current) return
       setStatus(resolveTo)
+      
       if (resolveTo === "success" && onSuccess) {
-        setTimeout(onSuccess, 800)
+        timeoutRef.current = setTimeout(() => {
+          if (isMounted.current) onSuccess()
+        }, 800)
       }
     }, 1500)
   }, [resolveTo, onSuccess])
