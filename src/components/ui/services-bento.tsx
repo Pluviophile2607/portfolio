@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Paintbrush, Code2, Layout, Sparkles } from "lucide-react";
-import LightPillar from "./LightPillar";
+import { Sparkles } from "lucide-react";
+import { CreativityIcon } from "./creativity-icon";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import ScrollReveal from "./ScrollReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -42,7 +41,7 @@ const ServiceCard = ({
       <div className="card-overlay absolute inset-0 bg-black rounded-[1px] opacity-0 pointer-events-none z-20" />
 
       {/* Top Section */}
-      <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 z-10 relative">
+      <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 z-10 relative pt-6 md:pt-8">
         <h3
           className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.8] uppercase text-center md:text-left max-w-full md:max-w-[70%]"
           style={{ color: textColor }}
@@ -52,10 +51,10 @@ const ServiceCard = ({
         <div className="shrink-0 opacity-80" style={{ color: textColor }}>
           {icon ? (
             React.cloneElement(icon, {
-              className: "w-8 h-8 md:w-10 md:h-10",
+              className: "w-14 h-14 md:w-20 md:h-20",
             })
           ) : (
-            <Sparkles className="w-8 h-8 md:w-10 md:h-10" />
+            <Sparkles className="w-14 h-14 md:w-20 md:h-20" />
           )}
         </div>
       </div>
@@ -70,11 +69,18 @@ const ServiceCard = ({
         </span>
 
         {image && (
-          <div className="service-media w-32 md:w-48 lg:w-64 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl transform rotate-3 md:rotate-6 transition-all duration-700 ease-out shrink-0">
+          <div 
+            className="service-media w-32 md:w-48 lg:w-64 aspect-[3/4] overflow-hidden shadow-2xl transform rotate-3 md:rotate-6 transition-all duration-700 ease-out shrink-0"
+            style={{ 
+              borderRadius: '10px',
+              WebkitMaskImage: '-webkit-radial-gradient(white, black)' 
+            }}
+          >
             <img
               src={image}
               alt={title}
               className="service-media-img w-full h-full object-cover transition-all duration-700"
+              style={{ borderRadius: '10px' }}
             />
           </div>
         )}
@@ -214,29 +220,29 @@ export function ServicesBento() {
       title: "UI/UX DESIGN",
       description:
         "Crafting user-friendly and visually engaging interfaces that deliver exceptional experiences through deep user research and modern design principles.",
-      icon: <Paintbrush />,
+      icon: <CreativityIcon />,
       image: "https://cdn.designfast.io/image/2026-05-15/f8804da4-fddc-4bee-bd0e-fda019a5afb5.jpeg",
-      bgColor: "#A3E635",
-      textColor: "#1A3001",
+      bgColor: "#090040",
+      textColor: "#F5F5F5",
       number: "01",
     },
     {
       title: "DEVELOPMENT",
       description:
         "Building responsive, high-performing websites with modern tools and technologies like React, Next.js, and Framer Motion.",
-      icon: <Code2 />,
+      icon: <CreativityIcon />,
       image: "https://cdn.designfast.io/image/2026-05-15/5ebb17b2-ac17-4934-984f-98995bd1d0bd.jpeg",
-      bgColor: "#FB923C",
-      textColor: "#431407",
+      bgColor: "#471396",
+      textColor: "#FFC94D",
       number: "02",
     },
     {
       title: "PROTOTYPING",
       description:
         "Turning ideas into interactive prototypes to visualize functionality and user flow effectively before moving into full-scale development.",
-      icon: <Sparkles />,
+      icon: <CreativityIcon />,
       image: "https://cdn.designfast.io/image/2026-05-15/2844cec8-8df0-41c5-8d78-786af7450f9b.jpeg",
-      bgColor: "#C084FC",
+      bgColor: "#B13BFF",
       textColor: "#2E1065",
       number: "03",
     },
@@ -248,22 +254,6 @@ export function ServicesBento() {
       ref={containerRef}
       className="bg-black relative overflow-visible pt-0 pb-0 md:pb-0 z-10"
     >
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <LightPillar
-          topColor="#5227FF"
-          bottomColor="#FF9FFC"
-          intensity={0.35}
-          rotationSpeed={0.04}
-          glowAmount={0.001}
-          pillarWidth={5.0}
-          pillarHeight={0.15}
-          noiseIntensity={0.2}
-          pillarRotation={0}
-          interactive={false}
-          mixBlendMode="screen"
-        />
-      </div>
-
       <div className="w-full px-0 relative z-10 flex flex-col">
         {services.map((service, index) => {
           const isLast = index === services.length - 1;

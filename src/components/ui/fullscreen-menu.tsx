@@ -142,7 +142,7 @@ export function FullscreenMenu({ children }: { children: React.ReactNode }) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed top-0 left-0 right-0 z-[110] px-6 md:px-12 pt-8 pb-8 flex justify-between items-center pointer-events-none"
+              className="fixed top-0 left-0 right-0 z-[110] px-6 md:px-12 pt-4 pb-4 flex justify-between items-center pointer-events-none"
             >
               <Link 
                 href="/" 
