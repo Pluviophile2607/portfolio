@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { VideoScrollHero } from "@/components/ui/video-scroll-hero";
 import { ProjectCards } from "@/components/ui/project-cards";
 import { ServicesBento } from "@/components/ui/services-bento";
@@ -20,6 +21,8 @@ export default function Home() {
     setHasLoadedGlobal 
   } = useLoading();
   
+  const router = useRouter();
+
   const handleIntroComplete = () => {
     setShowIntro(false);
   };
@@ -96,6 +99,7 @@ export default function Home() {
             popupHeading="Start a Project"
             popupDescription="Let's build something amazing together. Schedule a free consultation."
             ctaButtonText="Book Now"
+            ctaButtonAction={() => router.push("/contact")}
             revolvingText="GET IN TOUCH - LET'S TALK - FREE CONSULT - "
             imageSrc="https://cdn.designfast.io/image/2026-05-05/16257b17-2e65-438f-90e9-af38e1cd89c2.png"
           />

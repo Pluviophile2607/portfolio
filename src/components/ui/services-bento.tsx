@@ -244,6 +244,7 @@ export function ServicesBento() {
 
   return (
     <section
+      id="services"
       ref={containerRef}
       className="bg-black relative overflow-visible pt-0 pb-0 md:pb-0 z-10"
     >

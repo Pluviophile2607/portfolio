@@ -143,7 +143,7 @@ export const FloatingConsultButton = ({
       <AnimatePresence>
         {isVisible && (
           <motion.div 
-            className={`fixed z-[50] ${className}`}
+            className={`fixed z-[50] floating-button-container ${className}`}
             style={position}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -231,6 +231,12 @@ export const FloatingConsultButton = ({
             .relative.cursor-pointer.group .rounded-full.overflow-hidden {
               width: ${lgImageSize}px !important;
               height: ${lgImageSize}px !important;
+            }
+          }
+          @media (max-width: 1023px) {
+            .floating-button-container {
+              bottom: 1rem !important;
+              right: 1rem !important;
             }
           }
         `}</style>

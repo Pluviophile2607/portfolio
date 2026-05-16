@@ -76,8 +76,8 @@ export function NewGridSection() {
           </div>
 
           {/* div2 */}
-          <div className="md:col-span-3 md:row-span-4 md:col-start-3 rounded-3xl bg-zinc-900/50 border border-white/5 p-4 md:p-8 flex flex-col min-h-[500px] md:min-h-0">
-            <div className="grid grid-cols-6 gap-2 md:gap-3 mb-8">
+          <div className="md:col-span-3 md:row-span-4 md:col-start-3 rounded-3xl bg-zinc-900/50 border border-white/5 p-4 md:p-8 flex flex-col min-h-[420px] md:min-h-0">
+            <div className="grid grid-cols-6 gap-2 md:gap-3 mb-4 md:mb-8">
               {[
                 { name: "VS Code", icon: <img src="https://cdn.designfast.io/image/2026-05-06/a3a8a651-12fd-4f07-9996-9714018c907f.png" alt="VS Code" className="w-5 h-5 object-contain" />, href: "https://code.visualstudio.com/", className: "col-span-2" },
                 { name: "n8n", icon: <SiN8N className="w-4 h-4 text-[#FF6D5B]" />, href: "https://n8n.io/", className: "col-span-2" },
@@ -112,7 +112,7 @@ export function NewGridSection() {
               ))}
             </div>
             
-            <div className="mt-auto">
+            <div className="mt-4 md:mt-auto">
               <h3 className="text-2xl font-bold text-white mb-2">My Creative Toolkit</h3>
               <p className="text-zinc-400 text-[1.2rem] leading-relaxed">
                 Explore the powerful tools and technologies I use to bring ideas to life.

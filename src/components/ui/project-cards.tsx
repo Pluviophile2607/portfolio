@@ -42,7 +42,7 @@ export function ProjectCards() {
   });
 
   return (
-    <section className="bg-black pt-2 pb-24 overflow-hidden relative">
+    <section id="projects" className="bg-black pt-5 pb-24 overflow-hidden relative">
       {/* Header Button */}
       <div className="w-full flex justify-center mb-8 relative z-20">
         <LiquidMetalButton label="Projects" />
