@@ -45,9 +45,9 @@ export function NewGridSection() {
           {/* div1 */}
           <div className="md:col-span-2 md:row-span-4 rounded-3xl bg-zinc-900/50 border border-white/5 p-8 flex flex-col min-h-[500px] md:min-h-0">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold text-white mb-2">Let’s Stay <span className="text-[#ffc300]">Connected!</span></h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Let’s Build Something <span className="text-[#ffc300]">Amazing Together!</span></h3>
               <p className="text-zinc-400 text-[1.2rem] leading-relaxed">
-                Follow me on social media for design inspiration, behind-the-scenes updates, and the latest projects. Let’s create and grow together!
+                Connect with me for creative web experiences, modern UI/UX design, development projects, and innovative digital solutions.
               </p>
             </div>
             
