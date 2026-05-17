@@ -171,7 +171,7 @@ export default function ContactPage() {
               <div className="grid grid-cols-[100px_1fr] md:grid-cols-[150px_1fr] items-start gap-4">
                 <span className="text-zinc-500 text-xs md:text-sm font-bold tracking-widest uppercase pt-3">Interest</span>
                 <div className="flex flex-wrap gap-2 md:gap-4">
-                  {["DESIGN", "WEBFLOW DEVELOPMENT", "FULL PACKAGE"].map((option) => (
+                  {["DESIGN", "DEVELOPMENT", "FULL PACKAGE"].map((option) => (
                     <button
                       key={option}
                       type="button"
