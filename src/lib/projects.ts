@@ -51,7 +51,7 @@ export const projects: Project[] = [
     year: "2025",
     role: "Web Design & Development",
     tags: ["React", "GSAP", "Three.js", "Sustainable Design"],
-    liveUrl: "https://blue-gull-275507.hostingersite.com/"
+    liveUrl: "https://zedaid.org/"
   },
   {
     id: 3,
